@@ -10,10 +10,9 @@
     "build": "tsc",
     "prepublishOnly": "$npm_execpath run build"
   },
-  "homepage": "https://github.com/soswow/fit-curve",
+  "homepage": "https://github.com/odiak/fit-curve",
   "bugs": {
-    "url": "https://github.com/soswow/fit-curve/issues",
-    "email": "soswow@gmail.com"
+    "url": "https://github.com/odiak/fit-curve/issues"
   },
   "author": "Philip J. Schneider",
   "contributors": [
@@ -21,7 +20,8 @@
     "Aleksandr Motsjonov <soswow>",
     "<Yay295>",
     "Andreas Borgen <Sphinxxxx>",
-    "Tom Brewe <nylki>"
+    "Tom Brewe <nylki>",
+    "Kaido Iwamoto <odiak>"
   ],
   "license": "MIT",
   "devDependencies": {
