@@ -1,0 +1,30 @@
+{
+  "name": "@odiak/fit-curve",
+  "version": "0.2.0",
+  "description": "JavaScript implementation of Philip J. Schneider's \"Algorithm for Automatically Fitting Digitized Curves\" from the book \"Graphics Gems\"",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "$npm_execpath run build"
+  },
+  "homepage": "https://github.com/soswow/fit-curve",
+  "bugs": {
+    "url": "https://github.com/soswow/fit-curve/issues",
+    "email": "soswow@gmail.com"
+  },
+  "author": "Philip J. Schneider",
+  "contributors": [
+    "Volker Poplawski <volkerp>",
+    "Aleksandr Motsjonov <soswow>",
+    "<Yay295>",
+    "Andreas Borgen <Sphinxxxx>",
+    "Tom Brewe <nylki>"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^3.9.7"
+  }
+}
