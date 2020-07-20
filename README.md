@@ -8,24 +8,25 @@ This is a JS implementation of Philip J. Schneider's C code. The original C code
 ## Install
 
 ```
-npm install --save fit-curve
+npm install --save @odiak/fit-curve
 ```
 
 ## Usage
 
 ```javascript
-var fitCurve = require('fit-curve');
-var points = [[0, 0], [10, 10], [10, 0], [20, 0]];
-var error = 50; // The smaller the number - the much closer spline should be
+import { fitCurve } from '@odiak/fit-curve'
+const points = [
+  { x: 0, y: 0 },
+  { x: 10, y: 10 },
+  { x: 10, y: 0 },
+  { x: 20, y: 0 }
+]
+const error = 50 // The smaller the number - the much closer spline should be
 
-var bezierCurves = fitCurve(points, error);
-// bezierCurves[0] === [[0, 0], [20.27317402, 20.27317402], [-1.24665147, 0], [20, 0]]
-// where each element is [x, y] and elements are [first-point, control-point-1, control-point-2, second-point]
+const bezierCurves = fitCurve(points, error)
+// bezierCurves[0] === [ { x: 0, y: 0 }, { x: 20.27317402, y: 20.27317402 }, { x: -1.24665147, y: 0 }, { x: 20, y: 0 } ]
+// where each element is {x, y} and elements are [first-point, control-point-1, control-point-2, second-point]
 ```
-
-You can play around with that in this [demo](http://soswow.github.io/fit-curve/demo).
-
-![demo](https://github.com/soswow/fit-curves/raw/master/demo-screenshot.png "Demo")
 
 ## Changelog
 
