@@ -1,6 +1,6 @@
 {
   "name": "@odiak/fit-curve",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "JavaScript implementation of Philip J. Schneider's \"Algorithm for Automatically Fitting Digitized Curves\" from the book \"Graphics Gems\"",
   "main": "dist/index.js",
   "files": [
