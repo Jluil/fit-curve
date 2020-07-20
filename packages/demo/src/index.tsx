@@ -58,7 +58,9 @@ const App: FC<{}> = () => {
               ...path,
               smoothedPoints: {
                 tolerance: 3,
-                points: fitCurve(path.originalPoints, 3)
+                points: fitCurve(path.originalPoints, 3).flatMap((curve, i) =>
+                  i === 0 ? curve : curve.slice(1)
+                )
               }
             }
       )
@@ -86,13 +88,7 @@ const App: FC<{}> = () => {
                 fill="none"
                 d={smoothedPoints.points
                   .map(({ x, y }, i) =>
-                    i % 4 === 0
-                      ? i === 0
-                        ? `M ${x} ${y}`
-                        : ''
-                      : i % 4 === 1
-                      ? `C ${x} ${y}`
-                      : `${x} ${y}`
+                    i === 0 ? `M ${x} ${y}` : i % 3 === 1 ? `C ${x} ${y}` : `${x} ${y}`
                   )
                   .join(' ')}
               />

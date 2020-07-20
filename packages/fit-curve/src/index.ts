@@ -71,7 +71,7 @@ function dot(p0: Point, p1: Point): number {
  * @param maxError - Tolerance, squared error between points and fitted curve
  * @returns Array of Bezier curves, where each element is [first-point, control-point-1, control-point-2, second-point] and points are [x, y]
  */
-export function fitCurve(points: Points, maxError: number): Points {
+export function fitCurve(points: Points, maxError: number): ReadonlyArray<Curve> {
   if (points.length < 2) {
     return []
   }
@@ -93,17 +93,24 @@ export function fitCurve(points: Points, maxError: number): Points {
  * @param error - Tolerance, squared error between points and fitted curve
  * @returns Array of Bezier curves, where each element is [first-point, control-point-1, control-point-2, second-point] and points are [x, y]
  */
-function fitCubic(points: Points, leftTangent: Point, rightTangent: Point, error: number): Points {
+function fitCubic(
+  points: Points,
+  leftTangent: Point,
+  rightTangent: Point,
+  error: number
+): ReadonlyArray<Curve> {
   const MaxIterations = 20 //Max times to try iterating (to find an acceptable curve)
 
   //Use heuristic if region only has two points in it
   if (points.length === 2) {
     const dist = distance(points[0], points[1]) / 3
     return [
-      points[0],
-      add(points[0], scalarMul(leftTangent, dist)),
-      add(points[1], scalarMul(rightTangent, dist)),
-      points[1]
+      [
+        points[0],
+        add(points[0], scalarMul(leftTangent, dist)),
+        add(points[1], scalarMul(rightTangent, dist)),
+        points[1]
+      ]
     ]
   }
 
@@ -112,7 +119,7 @@ function fitCubic(points: Points, leftTangent: Point, rightTangent: Point, error
   let [bezCurve, maxError, splitPoint] = generateAndReport(points, u, u, leftTangent, rightTangent)
 
   if (maxError === 0 || maxError < error) {
-    return bezCurve
+    return [bezCurve]
   }
   //If error not too large, try some reparameterization and iteration
   if (maxError < error * error) {
@@ -130,7 +137,7 @@ function fitCubic(points: Points, leftTangent: Point, rightTangent: Point, error
         rightTangent
       )
 
-      if (maxError < error) return bezCurve
+      if (maxError < error) return [bezCurve]
       //If the development of the fitted curve grinds to a halt,
       //we abort this attempt (and try a shorter curve):
       else if (splitPoint === prevSplit) {
@@ -146,7 +153,7 @@ function fitCubic(points: Points, leftTangent: Point, rightTangent: Point, error
   }
 
   //Fitting failed -- split at max error point and fit recursively
-  const beziers: Array<Point> = []
+  const beziers: Array<Curve> = []
 
   //To create a smooth transition from one curve segment to the next, we
   //calculate the line between the points directly before and after the
