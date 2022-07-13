@@ -93,7 +93,7 @@ export function fitCurve(points: Points, maxError: number, closed = false): Read
       length++;
     }
     leftTangent = createTangent(upoints[1], upoints[length - 2])
-    rightTangent = createTangent(upoints[length - 2], upoints[0])
+    rightTangent = createTangent(upoints[length - 2], upoints[1])
   }
   return fitCubic(upoints, leftTangent, rightTangent, maxError)
 }
