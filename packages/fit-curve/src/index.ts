@@ -20,6 +20,10 @@ type Curve = [Point, Point, Point, Point]
 
 const zeroPoint = Object.freeze({ x: 0, y: 0 })
 
+function pointEquals(p1: Point, p2: Point) {
+  return (p1.x === p2.x && p1.y === p2.y);
+}
+
 function distance(p0: Point, p1: Point): number {
   return Math.sqrt((p0.x - p1.x) ** 2 + (p0.y - p1.y) ** 2)
 }
@@ -67,31 +71,42 @@ function dot(p0: Point, p1: Point): number {
 /**
  * Fit one or more Bezier curves to a set of points.
  *
- * @param points - Array of digitized points, e.g. [[5,5],[5,50],[110,140],[210,160],[320,110]]
+ * @param points - Array of digitized points, e.g. [{ x:5,y:5 },{ x:5,y:50 },{ x:110,y:140 },{ x:210,y:160 },{ x:320,y:110 }]
  * @param maxError - Tolerance, squared error between points and fitted curve
- * @returns Array of Bezier curves, where each element is [first-point, control-point-1, control-point-2, second-point] and points are [x, y]
+ * @param closed - Generate closed path
+ * @returns Array of Bezier curves, where each element is [first-point, control-point-1, control-point-2, second-point] and points are { x, y }
  */
-export function fitCurve(points: Points, maxError: number): ReadonlyArray<Curve> {
+export function fitCurve(points: Points, maxError: number, closed = false): ReadonlyArray<Curve> {
   if (points.length < 2) {
     return []
   }
+  let upoints = points.filter((pt, i) => i === 0 || !pointEquals(pt, points[i-1]));
 
-  const length = points.length
-  const leftTangent = createTangent(points[1], points[0])
-  const rightTangent = createTangent(points[length - 2], points[length - 1])
-
-  return fitCubic(points, leftTangent, rightTangent, maxError)
+  let length = upoints.length
+  let leftTangent: Point, rightTangent: Point;  
+  if (!closed) {
+    leftTangent = createTangent(upoints[1], upoints[0])
+    rightTangent = createTangent(upoints[length - 2], upoints[length - 1])
+  } else {
+    if (!pointEquals(upoints[0], upoints[length - 1])) {
+      upoints.push(upoints[0]);
+      length++;
+    }
+    leftTangent = createTangent(upoints[1], upoints[length - 2])
+    rightTangent = createTangent(upoints[length - 2], upoints[0])
+  }
+  return fitCubic(upoints, leftTangent, rightTangent, maxError)
 }
 
 /**
  * Fit a Bezier curve to a (sub)set of digitized points.
  * Your code should not call this function directly. Use {@link fitCurve} instead.
  *
- * @param points - Array of digitized points, e.g. [[5,5],[5,50],[110,140],[210,160],[320,110]]
+ * @param points - Array of digitized points, e.g. [{ x:5,y:5 },{ x:5,y:50 },{ x:110,y:140 },{ x:210,y:160 },{ x:320,y:110 }]
  * @param leftTangent - Unit tangent vector at start point
  * @param rightTangent - Unit tangent vector at end point
  * @param error - Tolerance, squared error between points and fitted curve
- * @returns Array of Bezier curves, where each element is [first-point, control-point-1, control-point-2, second-point] and points are [x, y]
+ * @returns Array of Bezier curves, where each element is [first-point, control-point-1, control-point-2, second-point] and points are { x, y }
  */
 function fitCubic(
   points: Points,
